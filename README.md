@@ -1,6 +1,6 @@
 # chatbot
 
-создание чатбота на основе [ChatBot](facebook/blenderbot-400M-distill)
+создание чатбота на основе [facebook/blenderbot-400M-distill](facebook/blenderbot-400M-distill)
 
 Задача: Создание чат-бота, который предлагает различные темы для последующего диалога.
 
