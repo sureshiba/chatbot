@@ -1,6 +1,6 @@
 # chatbot
 
-создание чатбота на основе [ChatBot](https://huggingface.co/facebook/blenderbot-400M-distill?text=Hi.)
+создание чатбота на основе [ChatBot](facebook/blenderbot-400M-distill)
 
 Задача: Создание чат-бота, который предлагает различные темы для последующего диалога.
 
