@@ -1,32 +1,36 @@
 import streamlit as st
-import streamlit_chat
 from streamlit_chat import message as st_message
-from transformers import pipeline, Conversation
+from transformers import BlenderbotTokenizer
+from transformers import BlenderbotForConditionalGeneration
+
+
+def get_models():
+    model_name = "facebook/blenderbot-400M-distill"
+    tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
+    model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+    return tokenizer, model
+
 
 if "history" not in st.session_state:
     st.session_state.history = []
-st.title("ChatBot")
-def main():
-    chatbot = pipeline(model="facebook/blenderbot-400M-distill")
+
+st.title("ChatBot :)")
 
 
-    user_input = st.text_input('User:', "")
+def generate_answer():
+    tokenizer, model = get_models()
+    user_message = st.session_state.input_text
+    inputs = tokenizer(st.session_state.input_text, return_tensors="pt")
+    result = model.generate(**inputs)
+    message_bot = tokenizer.decode(
+        result[0], skip_special_tokens=True
+    )  
 
-    if user_input.lower() == "bye":
-        print('Chatbot : Goodbye!')
+    st.session_state.history.append({"message": user_message, "is_user": True})
+    st.session_state.history.append({"message": message_bot, "is_user": False})
 
-    else:
-        conversation = Conversation()
-        conversation.add_user_input(user_input)
-        conversation = chatbot(conversation)
 
-        chatbot_response = conversation.generated_responses[-1]
-
-    st.session_state.history.append({"message": user_input, "is_user": True})
-    st.session_state.history.append({"message": chatbot_response, "is_user": False})
-
-if __name__ == "__main__":
-    main()
+st.text_input("write a message", key="input_text", on_change=generate_answer)
 
 for i, chat in enumerate(st.session_state.history):
-    st_message(**chat, key=str(i))
+    st_message(**chat, key=str(i)) 
